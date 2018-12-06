@@ -9,7 +9,6 @@ import ejb.CampanyaFacade;
 import entity.Campanya;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;

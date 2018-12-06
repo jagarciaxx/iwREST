@@ -6,6 +6,7 @@
 package wsClient;
 
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -25,6 +26,7 @@ import pojo.Campanya;
  *
  * @author JaGaRo
  */
+@Stateless
 public class CampanyaWSClient {
 
     private WebTarget webTarget;
@@ -48,13 +50,13 @@ public class CampanyaWSClient {
 
     public Campanya find(Integer id) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
+        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id.toString()}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(Campanya.class);
     }
 
     public List<Campanya> findRange(Integer from, Integer to) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from, to}));
+        resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from.toString(), to.toString()}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Campanya>>(){});
     }
 
@@ -66,9 +68,21 @@ public class CampanyaWSClient {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Campanya>>(){});
     }
+    
+    public List<Campanya> findByDate(String date) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("filter/date/{0}", new Object[]{date}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Campanya>>(){});
+    }
+    
+    public List<Campanya> findByModuloId(Integer id) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("find/byModuloId/{0}", new Object[]{id.toString()}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Campanya>>(){});
+    }
 
     public void remove(Integer id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id.toString()})).request().delete();
     }
 
     public void close() {

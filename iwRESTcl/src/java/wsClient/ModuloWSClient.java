@@ -6,6 +6,7 @@
 package wsClient;
 
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -24,6 +25,7 @@ import pojo.Modulo;
  *
  * @author JaGaRo
  */
+@Stateless
 public class ModuloWSClient {
 
     private WebTarget webTarget;
@@ -41,13 +43,13 @@ public class ModuloWSClient {
 
     public Modulo find(Integer id) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
+        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id.toString()}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(Modulo.class);
     }
 
     public List<Modulo> findRange(Integer from, Integer to) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from, to}));
+        resource = resource.path(java.text.MessageFormat.format("{0}/{1}", new Object[]{from.toString(), to.toString()}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Modulo>>(){});
     }
 
@@ -63,7 +65,31 @@ public class ModuloWSClient {
 
     public List<Modulo> findByValues(Double alpha, Double beta, Double gamma, Double kappa) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("values/{0}/{1}/{2}/{3}", new Object[]{alpha, beta, gamma, kappa}));
+        resource = resource.path(java.text.MessageFormat.format("filter/values/{0}/{1}/{2}/{3}", new Object[]{alpha.toString(), beta.toString(), gamma.toString(), kappa.toString()}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Modulo>>(){});
+    }
+    
+    public List<Modulo> findByRendimientoGreater(Double rendimiento) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("filter/rendimiento/greater/{0}", new Object[]{rendimiento.toString()}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Modulo>>(){});
+    }
+    
+    public List<Modulo> findByRendimientoLower(Double rendimiento) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("filter/rendimiento/lower/{0}", new Object[]{rendimiento.toString()}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Modulo>>(){});
+    }
+    
+    public List<Modulo> findByResistenciaGreater(Double resistencia) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("filter/resistencia/greater/{0}", new Object[]{resistencia.toString()}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Modulo>>(){}); 
+    }
+    
+    public List<Modulo> findByResistenciaLower(Double resistencia) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("filter/resistencia/lower/{0}", new Object[]{resistencia.toString()}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<List<Modulo>>(){});
     }
 
@@ -73,7 +99,7 @@ public class ModuloWSClient {
     }
 
     public void remove(Integer id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id.toString()})).request().delete();
     }
 
     public void close() {
